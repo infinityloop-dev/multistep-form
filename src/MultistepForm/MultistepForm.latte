@@ -1,3 +1,7 @@
 {snippet snippet}
-    {control form}
+    {if \is_string($customTemplate)}
+        {include $customTemplate}
+    {else}
+        {control form}
+    {/if}
 {/snippet}

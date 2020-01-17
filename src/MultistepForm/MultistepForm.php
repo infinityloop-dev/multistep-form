@@ -145,6 +145,7 @@ final class MultistepForm extends \Nette\Application\UI\Control
     public function saveState(array &$params): void
     {
         $params['step'] = $this->currentStep ?? 1;
+        $params[self::FORM_IDENTIFIER] = $this->subsessionId;
     }
 
     /**
@@ -153,6 +154,7 @@ final class MultistepForm extends \Nette\Application\UI\Control
     public function loadState(array $params): void
     {
         $this->currentStep = (int) ($params['step'] ?? 1);
+        $this->subsessionId = $params[self::FORM_IDENTIFIER] ?? $this->subsessionId;
     }
 
     protected function createComponentForm() : \Nette\Forms\Form

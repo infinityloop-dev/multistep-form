@@ -24,6 +24,7 @@ composer require infinityloop-dev/multistep-form
 - Register `\Infinityloop\MultistepForm\IMultiStepFormFactory` as service in cofiguration file.
 - Inject it into component/presenter where you wish to use multi step form, 
     - write createComponent method and use macro {control} in template file
+- Submit buttons for moving forward and backward are added automaticaly.
 
 ### Example createComponent method
 
@@ -55,7 +56,7 @@ protected function createComponentMultistepForm() : \Infinityloop\MultistepForm\
         $form->setTranslator($this->translator);
 
         if (\in_array($previousValues['action'], [\App\Enum\EAction::ACTION1, \App\Enum\EAction::ACTION2], true)) {
-            $form->addAjaxSelect('action_1or2', 'Action 1 or 2')
+            $form->addText('action_1or2', 'Action 1 or 2')
                 ->setRequired();
         } else {
             $form->addText('action_xyz', 'Action Xyz')
@@ -66,3 +67,13 @@ protected function createComponentMultistepForm() : \Infinityloop\MultistepForm\
     return $multistepForm;
 }
 ```
+
+### Options
+
+- setDefaults(array)
+    - set default values for your form, all steps at once
+- addFactory(callable, ?string)
+    - first argument is factory function from which the form is created
+    - second argument is custom template path
+        - the standard `{control form}` is used if no template is specified for current step
+        - in custom template you can manualy render each step using `{form form} ... {/form}`

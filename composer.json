@@ -1,0 +1,23 @@
+{
+  "name": "infinityloop-dev/multistep-form",
+  "description": "Component for Nette framwork which helps with creation of multistep forms.",
+  "homepage": "https://www.infinityloop.dev/",
+  "type": "library",
+  "license": ["MIT"],
+  "authors": [
+    {
+      "name": "Václav Pelíšek",
+      "homepage": "https://www.peldax.com"
+    }
+  ],
+  "require": {
+    "nette/application": "^3.0",
+    "nette/http": "^3.0",
+    "nette/forms": "^3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Infinityloop\\": "src/"
+    }
+  }
+}

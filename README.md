@@ -71,9 +71,11 @@ protected function createComponentMultistepForm() : \Infinityloop\MultistepForm\
 ### Options
 
 - setDefaults(array)
-    - set default values for your form, all steps at once
+    - default values for your form, all steps at once
 - addFactory(callable, ?string)
     - first argument is factory function from which the form is created
     - second argument is custom template path
         - the standard `{control form}` is used if no template is specified for current step
         - in custom template you can manualy render each step using `{form form} ... {/form}`
+- setSuccessCallback(callable)
+    - callback where values from all steps are sent after submitting last step

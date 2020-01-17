@@ -12,6 +12,7 @@ final class MultistepForm extends \Nette\Application\UI\Control
     private string $subsessionId;
     private int $currentStep;
     private array $factories = [];
+    private array $templates = [];
     private array $defaults = [];
     private bool $editing = false;
     private bool $stepSave = false;
@@ -28,6 +29,13 @@ final class MultistepForm extends \Nette\Application\UI\Control
 
     public function render() : void
     {
+        if (\count($this->factories) < $this->currentStep ||
+            \count($this->templates) < $this->currentStep
+        ) {
+            throw new \Nette\InvalidStateException('No factory given');
+        }
+
+        $this->template->customTemplate = $this->templates[$this->currentStep - 1];
         $this->template->setFile(__DIR__ . '/MultistepForm.latte');
         $this->template->render();
     }
@@ -39,9 +47,10 @@ final class MultistepForm extends \Nette\Application\UI\Control
         return $this;
     }
 
-    public function addFactory($factory) : self
+    public function addFactory($factory, string $templatePath = null) : self
     {
         $this->factories[] = $factory;
+        $this->templates[] = $templatePath;
 
         return $this;
     }
@@ -116,7 +125,7 @@ final class MultistepForm extends \Nette\Application\UI\Control
 
     /**
      * Returns all filled values.
-     * 
+     *
      * @return array
      */
     public function getValues() : array
@@ -148,10 +157,6 @@ final class MultistepForm extends \Nette\Application\UI\Control
 
     protected function createComponentForm() : \Nette\Forms\Form
     {
-        if (\count($this->factories) < $this->currentStep) {
-            throw new \Nette\InvalidStateException('No factory given');
-        }
-
         $factory = $this->factories[$this->currentStep - 1];
 
         if (\is_object($factory) && \method_exists($factory, 'create')) {
@@ -187,9 +192,9 @@ final class MultistepForm extends \Nette\Application\UI\Control
             $previous->setDisabled();
         }
 
-        /*if ($this->isEdit()) {
+        if ($this->stepSave && $this->isEdit()) {
             $form->addSubmit('quicksave', 'Uložit');
-        }*/
+        }
 
         $next->onClick[] = function (\Nette\Forms\Controls\SubmitButton $button) : void {
             $form = $button->getForm();

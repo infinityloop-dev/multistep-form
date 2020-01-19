@@ -14,6 +14,7 @@ composer require infinityloop-dev/multistep-form
 
 ## Dependencies
 
+- PHP >= 7.4
 - [nette/application](https://github.com/nette/application)
 - [nette/http](https://github.com/nette/http)
 - [nette/forms](https://github.com/nette/forms)

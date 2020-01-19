@@ -162,7 +162,7 @@ final class MultistepForm extends \Nette\Application\UI\Control
         $factory = $this->factories[$this->currentStep - 1];
 
         if (\is_object($factory) && \method_exists($factory, 'create')) {
-            $step = $factory->create();
+            $step = $factory->create($this->getValues());
         } elseif (\is_callable($factory)) {
             $step = $factory($this->getValues());
         } else {
@@ -218,7 +218,7 @@ final class MultistepForm extends \Nette\Application\UI\Control
     {
         $section = $this->session->getSection('multiStepForm-' . $this->subsessionId);
         $section->warnOnUndefined = true;
-        $section->setExpiration('+ 20 minutes');
+        $section->setExpiration('+ 14 days');
 
         return $section;
     }

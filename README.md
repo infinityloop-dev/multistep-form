@@ -4,6 +4,8 @@
 
 ## Introduction
 
+This component provides a simple way to create a multistep form. Handles swapping between steps, passing values from previous steps to current one and passing all combined values to final success callback. Also handles common edge cases, such as distinction between multiple instances of one form accessed by one client.
+
 ## Installation
 
 Install package using composer

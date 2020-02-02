@@ -14,8 +14,7 @@ final class MultistepForm extends \Nette\Application\UI\Control
     private array $factories = [];
     private array $templates = [];
     private array $defaults = [];
-    private bool $editing = false;
-    private bool $stepSave = false;
+    private bool $buttonSubmitted = false;
     private $successCallback = null;
 
     public function __construct(
@@ -62,20 +61,6 @@ final class MultistepForm extends \Nette\Application\UI\Control
         return $this;
     }
 
-    public function setEditing(bool $editing = true) : self
-    {
-        $this->editing = $editing;
-
-        return $this;
-    }
-
-    public function setStepSave(bool $stepSave = true) : self
-    {
-        $this->stepSave = $stepSave;
-
-        return $this;
-    }
-
     public function setSuccessCallback(callable $successCallback) : self
     {
         $this->successCallback = $successCallback;
@@ -112,7 +97,7 @@ final class MultistepForm extends \Nette\Application\UI\Control
      */
     public function isEdit() : bool
     {
-        return $this->editing;
+        return false;
     }
 
     /**
@@ -194,11 +179,20 @@ final class MultistepForm extends \Nette\Application\UI\Control
             $previous->setDisabled();
         }
 
-        if ($this->stepSave && $this->isEdit()) {
+        if ($this->isEdit()) {
             $form->addSubmit('quicksave', 'Uložit');
         }
 
+        $form->onSuccess[] = function (\Nette\Forms\Form $form) : void {
+            if ($this->buttonSubmitted) {
+                return;
+            }
+
+            $this->onNext($form, $form->getValues('array'));
+        };
+
         $next->onClick[] = function (\Nette\Forms\Controls\SubmitButton $button) : void {
+            $this->buttonSubmitted = true;
             $form = $button->getForm();
             \assert($form instanceof \Nette\Forms\Form);
             $this->onNext($form, $form->getValues('array'));
@@ -206,6 +200,7 @@ final class MultistepForm extends \Nette\Application\UI\Control
 
         $previous->setValidationScope([]);
         $previous->onClick[] = function (\Nette\Forms\Controls\SubmitButton $button) : void {
+            $this->buttonSubmitted = true;
             $form = $button->getForm();
             \assert($form instanceof \Nette\Forms\Form);
             $this->onPrevious($form, $form->getValues('array'));
